@@ -16,12 +16,28 @@ class ApplicationTest(TestCase):
     def test_read_many_products(self):
         response = self.client.get("/api/v1/products")
         products = response.json
-        self.assertIsInstance(products, dict)
-        self.assertGreater(len(products), 1)  # 2 is not a mistake here.
+        self.assertIsInstance(products, list)
+        self.assertGreater(len(products), 2)  # 2 is not a mistake here.
 
     def test_one_product(self):
         rep = self.client.get("/api/v1/products/1")
         produit = rep.json
         self.assertEqual(rep.status_code, 200)
-        self.assertIsInstance(produit, dict)
-        self.assertEqual(produit['name'], 'Skello')
+        self.assertEqual(produit['name'],'Skello')
+
+    def test_id_not_in_product(self):
+        rep = self.client.get("/api/v1/products/102")
+        self.assertEqual(rep.status_code, 404)
+
+    def test_delete_product(self):
+        rep = self.client.delete("/api/v1/products/4")
+        produit = rep.json
+        self.assertEqual(rep.status_code, 204)
+        self.assertIsNone(produit)
+
+
+
+
+
+
+
